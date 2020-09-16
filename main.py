@@ -19,7 +19,7 @@ def main():
     for article in articles:
         print(article.title)
         print(article.author_name)
-        print(article.get_text())
+        print(article.get_text(color=True))
 
 
 if __name__ == "__main__":

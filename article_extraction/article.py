@@ -1,12 +1,32 @@
 import bs4
 
 from article_extraction.io import read_text
+from article_extraction.const import TERMINAL_COLOR
 
 
 class Sentence(object):
 
     def __init__(self, text):
         self.text = text
+        self.is_deleted = False
+
+    def delete(self):
+        self.is_deleted = True
+
+    def get_text(self, color=False):
+        if color:
+            if self.is_deleted:
+                text = self.text
+            else:
+                text = "{}{}{}".format(
+                    TERMINAL_COLOR.OKGREEN,
+                    self.text,
+                    TERMINAL_COLOR.ENDC,
+                )
+        else:
+            text = self.text
+
+        return text
 
 
 class Paragraph(object):
@@ -14,8 +34,12 @@ class Paragraph(object):
     def __init__(self, sentences):
         self.sentences = sentences
 
-    def get_text(self):
-        return "\n".join([s.text for s in self.sentences])
+    def delete(self):
+        for sentence in self.sentences:
+            sentence.delete()
+
+    def get_text(self, color=False):
+        return "\n".join([s.get_text(color=color) for s in self.sentences])
 
 
 class Article(object):
@@ -58,5 +82,5 @@ class Article(object):
 
         return title, author_name, paragraphs
 
-    def get_text(self):
-        return "\n\n".join([p.get_text() for p in self.paragraphs])
+    def get_text(self, color=False):
+        return "\n\n".join([p.get_text(color=color) for p in self.paragraphs])
