@@ -24,7 +24,12 @@ def main():
     articles = [Article(p) for p in html_paths]
 
     for article in articles:
-        for pargraph in article.paragraphs:
+        # Delete last graph of an article because it is not useful in most
+        # cases.
+        article.paragraphs[-1].delete()
+
+        # Handle for each paragraph (except last paragraph).
+        for pargraph in article.paragraphs[0:-1]:
             for sentence in pargraph.sentences:
                 if contain_filtered_words(sentence.text, FILTERED_WORDS):
                     sentence.delete()
