@@ -77,8 +77,18 @@ class Article(object):
 
         article_body = soup.findAll("div", {"class": "article-body"})[0]
 
-        sentence_texts = [x.getText(strip=True)
-                          for x in article_body.find_all("p")]
+        sentence_texts = []
+        for p in article_body.find_all("p"):
+            sentence_text = p.getText(strip=True)
+
+            # Skip the case that the whole sentence text is a link.
+            if len(sentence_text) > 1:
+                anchor_child = p.find("a")
+                if anchor_child is not None:
+                    if sentence_text == anchor_child.getText(strip=True):
+                        continue
+
+            sentence_texts.append(sentence_text)
 
         paragraphs = []
         paragraph_sentences = []
