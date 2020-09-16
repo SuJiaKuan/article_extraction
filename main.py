@@ -53,8 +53,7 @@ def main():
                     if similarity >= SIMILARITY_THRESHOLD:
                         sentence.delete()
 
-            num_deleted = len([s for s in paragraph.sentences
-                               if sentence.is_deleted])
+            num_deleted = len([s for s in paragraph.sentences if s.is_deleted])
             ratio_deleted = num_deleted / len(paragraph.sentences)
             if ratio_deleted >= DELETE_DIRECTLY_THRESHOLD:
                 paragraph.delete()
