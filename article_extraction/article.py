@@ -6,8 +6,9 @@ from article_extraction.const import TERMINAL_COLOR
 
 class Sentence(object):
 
-    def __init__(self, text):
+    def __init__(self, text, idx):
         self.text = text
+        self.idx = idx
         self.is_deleted = False
 
     def delete(self):
@@ -31,8 +32,9 @@ class Sentence(object):
 
 class Paragraph(object):
 
-    def __init__(self, sentences):
+    def __init__(self, sentences, idx):
         self.sentences = sentences
+        self.idx = idx
 
     def delete(self):
         for sentence in self.sentences:
@@ -69,16 +71,27 @@ class Article(object):
         paragraphs = []
         paragraph_sentences = []
 
+        sentence_idx = 0
+        paragraph_idx = 0
+
         for sentence_text in sentence_texts:
             if len(sentence_text) <= 1:
                 if paragraph_sentences:
-                    paragraphs.append(Paragraph(paragraph_sentences))
+                    paragraphs.append(Paragraph(
+                        paragraph_sentences,
+                        paragraph_idx,
+                    ))
+                    paragraph_idx += 1
                     paragraph_sentences = []
             else:
-                paragraph_sentences.append(Sentence(sentence_text))
+                paragraph_sentences.append(Sentence(
+                    sentence_text,
+                    sentence_idx,
+                ))
+                sentence_idx += 1
 
         if paragraph_sentences:
-            paragraphs.append(Paragraph(paragraph_sentences))
+            paragraphs.append(Paragraph(paragraph_sentences, paragraph_idx))
 
         return title, author_name, paragraphs
 
