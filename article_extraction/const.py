@@ -14,6 +14,8 @@ FILTERED_WORDS = [
     # Facebook / Instagram / Telegram / LINE/ YouTube.
     "按讚",
     "按個讚",
+    "點讚",
+    "點個讚",
     "追蹤",
     "Instagram",
     "instagram",
@@ -36,6 +38,10 @@ FILTERED_WORDS = [
     # Information about external webpages.
     "http",
     "連結",
+    # Information about menu.
+    # "菜單",
+    # "Menu",
+    # "MENU",
     # Information about the store.
     "店家資訊",
     "餐廳資訊",
@@ -55,9 +61,10 @@ FILTERED_WORDS = [
     "延伸閱讀",
     "延展閱讀",
     "同步發表",
+    "週邊美食",
     "懶人包",
     "食記",
-    "美食",
+    # "美食",
     # Information about fixed text about Pixnet.
     "痞客邦",
 ]
