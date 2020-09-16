@@ -1,7 +1,4 @@
-import numpy as np
-
 from article_extraction.article import Article
-from article_extraction.model import SentenceEncoder
 from article_extraction.const import FILTERED_WORDS
 
 
@@ -29,15 +26,9 @@ def main():
        "./data/html/samples/dama.html",
     ]
 
-    sentence_encoder = SentenceEncoder()
-
     articles = [Article(p) for p in html_paths]
 
     for article in articles:
-        title_vec = sentence_encoder.encode(article.title)
-
-        start_similarity_idx = len(article.paragraphs) * START_SIMILARITY_RATIO
-
         # Delete last graph of an article because it is not useful in most
         # cases.
         article.paragraphs[-1].delete()
@@ -50,14 +41,6 @@ def main():
                 if sentence.contains(FILTERED_WORDS):
                     sentence.delete()
                     num_deleted += 1
-
-            if num_deleted > 0 and paragraph.idx >= start_similarity_idx:
-                for sentence in paragraph.sentences:
-                    sentence_vec = sentence_encoder.encode(sentence.text)
-                    similarity = np.dot(title_vec, sentence_vec)
-                    if similarity >= SIMILARITY_THRESHOLD:
-                        sentence.delete()
-                        num_deleted += 1
 
             num_deleted = len([s for s in paragraph.sentences if s.is_deleted])
             ratio_deleted = num_deleted / len(paragraph.sentences)
