@@ -44,14 +44,20 @@ def main():
 
         # Handle for each paragraph (except last paragraph).
         for paragraph in article.paragraphs[0:-1]:
+            num_deleted = 0
+
             for sentence in paragraph.sentences:
                 if sentence.contains(FILTERED_WORDS):
                     sentence.delete()
-                elif paragraph.idx >= start_similarity_idx:
+                    num_deleted += 1
+
+            if num_deleted > 0 and paragraph.idx >= start_similarity_idx:
+                for sentence in paragraph.sentences:
                     sentence_vec = sentence_encoder.encode(sentence.text)
                     similarity = np.dot(title_vec, sentence_vec)
                     if similarity >= SIMILARITY_THRESHOLD:
                         sentence.delete()
+                        num_deleted += 1
 
             num_deleted = len([s for s in paragraph.sentences if s.is_deleted])
             ratio_deleted = num_deleted / len(paragraph.sentences)
