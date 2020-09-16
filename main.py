@@ -8,6 +8,8 @@ from article_extraction.const import FILTERED_WORDS
 START_SIMILARITY_RATIO = 0.5
 SIMILARITY_THRESHOLD = 0.5
 
+DELETE_DIRECTLY_THRESHOLD = 0.5
+
 
 def main():
     '''
@@ -41,15 +43,21 @@ def main():
         article.paragraphs[-1].delete()
 
         # Handle for each paragraph (except last paragraph).
-        for pargraph in article.paragraphs[0:-1]:
-            for sentence in pargraph.sentences:
+        for paragraph in article.paragraphs[0:-1]:
+            for sentence in paragraph.sentences:
                 if sentence.contains(FILTERED_WORDS):
                     sentence.delete()
-                elif pargraph.idx >= start_similarity_idx:
+                elif paragraph.idx >= start_similarity_idx:
                     sentence_vec = sentence_encoder.encode(sentence.text)
                     similarity = np.dot(title_vec, sentence_vec)
                     if similarity >= SIMILARITY_THRESHOLD:
                         sentence.delete()
+
+            num_deleted = len([s for s in paragraph.sentences
+                               if sentence.is_deleted])
+            ratio_deleted = num_deleted / len(paragraph.sentences)
+            if ratio_deleted >= DELETE_DIRECTLY_THRESHOLD:
+                paragraph.delete()
 
         print("[TITLE]", article.title)
         print("[AUTHOR]", article.author_name)
