@@ -1,5 +1,4 @@
 from article_extraction.article import Article
-from article_extraction.util import contain_filtered_words
 from article_extraction.const import FILTERED_WORDS
 
 
@@ -31,7 +30,7 @@ def main():
         # Handle for each paragraph (except last paragraph).
         for pargraph in article.paragraphs[0:-1]:
             for sentence in pargraph.sentences:
-                if contain_filtered_words(sentence.text, FILTERED_WORDS):
+                if sentence.contains(FILTERED_WORDS):
                     sentence.delete()
 
         print("[TITLE]", article.title)
