@@ -4,6 +4,7 @@ from article_extraction.const import FILTERED_WORDS
 
 
 def main():
+    '''
     html_paths = [
        "./data/html/samples/dama.html",
        "./data/html/samples/shuba.html",
@@ -15,6 +16,10 @@ def main():
        "./data/html/samples/korea_soup.html",
        "./data/html/samples/ah_cheng.html",
     ]
+    '''
+    html_paths = [
+       "./data/html/samples/dama.html",
+    ]
 
     articles = [Article(p) for p in html_paths]
 
@@ -24,9 +29,11 @@ def main():
                 if contain_filtered_words(sentence.text, FILTERED_WORDS):
                     sentence.delete()
 
-        print(article.title)
-        print(article.author_name)
+        print("[TITLE]", article.title)
+        print("[AUTHOR]", article.author_name)
+        print("[CONTENT]")
         print(article.get_text(color=True))
+        print("==============================")
 
 
 if __name__ == "__main__":
