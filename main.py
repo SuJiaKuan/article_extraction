@@ -22,6 +22,10 @@ def main():
        "./data/html/samples/ah_cheng.html",
     ]
     '''
+    '''
+    html_paths = ['./data/html/777/{}.html'.format(str(i).zfill(4))
+                  for i in range(0, 10)]
+    '''
     html_paths = [
        "./data/html/samples/dama.html",
     ]
