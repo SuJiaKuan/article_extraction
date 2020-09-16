@@ -1,5 +1,6 @@
 from article_extraction.article import Article
 from article_extraction.const import FILTERED_WORDS
+from article_extraction.const import TAIWAN_COUNTRIES
 
 
 START_SIMILARITY_RATIO = 0.5
@@ -42,7 +43,10 @@ def main():
             num_deleted = 0
 
             for sentence in paragraph.sentences:
-                if sentence.contains(FILTERED_WORDS):
+                should_delete = \
+                    sentence.contains(FILTERED_WORDS) \
+                    or sentence.contains(TAIWAN_COUNTRIES)
+                if should_delete:
                     sentence.delete()
                     num_deleted += 1
 
