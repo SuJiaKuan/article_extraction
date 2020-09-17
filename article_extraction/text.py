@@ -36,3 +36,12 @@ def replace(text, mapping):
         text_out = text_out.replace(before, after)
 
     return text_out
+
+
+def remove_continuous_tokens(text, tokens):
+    text_out = text
+
+    for token in tokens:
+        text_out = re.sub("[{}]+".format(token), token, text_out)
+
+    return text_out

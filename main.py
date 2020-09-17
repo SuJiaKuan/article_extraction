@@ -1,10 +1,12 @@
 from article_extraction.article import Article
 from article_extraction.text import contains
+from article_extraction.text import remove_continuous_tokens
 from article_extraction.text import de_emojify
 from article_extraction.text import replace
 from article_extraction.const import FILTERED_WORDS
 from article_extraction.const import REPLACEMENT_MAPPING
 from article_extraction.const import SENTENCE_END_TOKENS
+from article_extraction.const import NO_CONTINUOUS_TOKENS
 from article_extraction.const import PARAGRAPH_END_TOKENS
 from article_extraction.const import TAIWAN_COUNTRIES
 
@@ -51,6 +53,10 @@ def main():
                 sentence.text = replace(
                     sentence.text,
                     REPLACEMENT_MAPPING,
+                )
+                sentence.text = remove_continuous_tokens(
+                    sentence.text,
+                    NO_CONTINUOUS_TOKENS,
                 )
 
                 while sentence.text.endswith('~'):

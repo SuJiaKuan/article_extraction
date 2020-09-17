@@ -121,6 +121,12 @@ PARAGRAPH_END_TOKENS = (
     "？",
 )
 
+NO_CONTINUOUS_TOKENS = SENTENCE_END_TOKENS + (
+    " ",
+    "（",
+    "）",
+)
+
 TAIWAN_COUNTRIES = [
     "臺北市",
     "台北市",
