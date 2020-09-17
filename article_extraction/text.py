@@ -1,6 +1,19 @@
 import re
 
 
+def contains(text, words):
+    for word in words:
+        if type(word) == list:
+            contained_list = [f in text for f in word]
+            if all(contained_list):
+                return True
+        else:
+            if word in text:
+                return True
+
+    return False
+
+
 def de_emojify(text):
     pattern = (
         u"["

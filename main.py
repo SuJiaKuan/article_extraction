@@ -1,4 +1,5 @@
 from article_extraction.article import Article
+from article_extraction.text import contains
 from article_extraction.text import de_emojify
 from article_extraction.text import replace
 from article_extraction.const import FILTERED_WORDS
@@ -65,8 +66,8 @@ def main():
 
                 should_delete = \
                     len(sentence.text) == 0 \
-                    or sentence.contains(FILTERED_WORDS) \
-                    or sentence.contains(TAIWAN_COUNTRIES)
+                    or contains(sentence.text, FILTERED_WORDS) \
+                    or contains(sentence.text, TAIWAN_COUNTRIES)
                 if should_delete:
                     sentence.delete()
                     num_deleted += 1

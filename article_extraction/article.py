@@ -29,18 +29,6 @@ class Sentence(object):
 
         return text
 
-    def contains(self, words):
-        for word in words:
-            if type(word) == list:
-                contained_list = [f in self.text for f in word]
-                if all(contained_list):
-                    return True
-            else:
-                if word in self.text:
-                    return True
-
-        return False
-
 
 class Paragraph(object):
 
