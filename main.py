@@ -76,10 +76,18 @@ def main():
             if ratio_deleted >= DELETE_DIRECTLY_THRESHOLD:
                 paragraph.delete()
 
+        content_pretty = article.get_text(color=True)
+        content_compact = article.get_text(compact=True, deleted=False)
+
+        if not content_compact.endswith("。"):
+            content_compact = content_compact[0:-1] + "。"
+
         print("[TITLE]", article.title)
         print("[AUTHOR]", article.author_name)
-        print("[CONTENT]")
-        print(article.get_text(color=True))
+        print("[CONTENT : PRETTY]")
+        print(content_pretty)
+        print("[CONTENT : COMPACT]")
+        print(content_compact)
         print("==============================")
 
 

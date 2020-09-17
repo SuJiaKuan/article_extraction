@@ -52,8 +52,13 @@ class Paragraph(object):
         for sentence in self.sentences:
             sentence.delete()
 
-    def get_text(self, color=False):
-        return "\n".join([s.get_text(color=color) for s in self.sentences])
+    def get_text(self, color=False, deleted=True):
+        out_sentences = []
+        for sentence in self.sentences:
+            if deleted or not sentence.is_deleted:
+                out_sentences.append(sentence.get_text(color=color))
+
+        return "\n".join(out_sentences)
 
 
 class Article(object):
@@ -118,5 +123,11 @@ class Article(object):
 
         return title, author_name, paragraphs
 
-    def get_text(self, color=False):
-        return "\n\n".join([p.get_text(color=color) for p in self.paragraphs])
+    def get_text(self, color=False, deleted=True, compact=False):
+        text = "\n\n".join([p.get_text(color=color, deleted=deleted)
+                            for p in self.paragraphs])
+
+        if compact:
+            text = text.replace("\n", "")
+
+        return text
