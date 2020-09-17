@@ -52,6 +52,9 @@ def main():
                     REPLACEMENT_MAPPING,
                 )
 
+                while sentence.text.endswith('~'):
+                    sentence.text = sentence.text[0:-1]
+
                 if sentence.text:
                     if num_sentences == 1 or sentence.idx < num_sentences - 1:
                         if not sentence.text.endswith(SENTENCE_END_TOKENS):
