@@ -14,3 +14,12 @@ def de_emojify(text):
     text_out = regrex_pattern.sub(r'', text)
 
     return text_out
+
+
+def replace(text, mapping):
+    text_out = text
+
+    for before, after in mapping.items():
+        text_out = text_out.replace(before, after)
+
+    return text_out

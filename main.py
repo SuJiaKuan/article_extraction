@@ -1,11 +1,10 @@
 from article_extraction.article import Article
 from article_extraction.text import de_emojify
+from article_extraction.text import replace
 from article_extraction.const import FILTERED_WORDS
+from article_extraction.const import REPLACEMENT_MAPPING
 from article_extraction.const import TAIWAN_COUNTRIES
 
-
-START_SIMILARITY_RATIO = 0.5
-SIMILARITY_THRESHOLD = 0.5
 
 DELETE_DIRECTLY_THRESHOLD = 0.5
 
@@ -45,9 +44,14 @@ def main():
 
             for sentence in paragraph.sentences:
                 sentence.text = de_emojify(sentence.text)
+                sentence.text = replace(
+                    sentence.text,
+                    REPLACEMENT_MAPPING,
+                )
 
                 should_delete = \
-                    sentence.contains(FILTERED_WORDS) \
+                    len(sentence.text) == 0 \
+                    or sentence.contains(FILTERED_WORDS) \
                     or sentence.contains(TAIWAN_COUNTRIES)
                 if should_delete:
                     sentence.delete()
