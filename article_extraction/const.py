@@ -102,6 +102,7 @@ REPLACEMENT_MAPPING = {
     "▲": "",
     "​": "",
     "★": "",
+    "♥": "",
 }
 
 TAIWAN_COUNTRIES = [
