@@ -104,6 +104,7 @@ class Article(object):
                         paragraph_idx,
                     ))
                     paragraph_idx += 1
+                    sentence_idx = 0
                     paragraph_sentences = []
             else:
                 paragraph_sentences.append(Sentence(
