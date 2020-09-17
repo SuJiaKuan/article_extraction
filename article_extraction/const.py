@@ -105,6 +105,21 @@ REPLACEMENT_MAPPING = {
     "♥": "",
 }
 
+SENTENCE_END_TOKENS = (
+    "，",
+    "。",
+    "！",
+    "？",
+    "：",
+    "、",
+)
+
+PARAGRAPH_END_TOKENS = (
+    "。",
+    "！",
+    "？",
+)
+
 TAIWAN_COUNTRIES = [
     "臺北市",
     "台北市",

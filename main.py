@@ -3,6 +3,8 @@ from article_extraction.text import de_emojify
 from article_extraction.text import replace
 from article_extraction.const import FILTERED_WORDS
 from article_extraction.const import REPLACEMENT_MAPPING
+from article_extraction.const import SENTENCE_END_TOKENS
+from article_extraction.const import PARAGRAPH_END_TOKENS
 from article_extraction.const import TAIWAN_COUNTRIES
 
 
@@ -41,6 +43,7 @@ def main():
         # Handle for each paragraph (except last paragraph).
         for paragraph in article.paragraphs[0:-1]:
             num_deleted = 0
+            num_sentences = len(paragraph.sentences)
 
             for sentence in paragraph.sentences:
                 sentence.text = de_emojify(sentence.text)
@@ -48,6 +51,14 @@ def main():
                     sentence.text,
                     REPLACEMENT_MAPPING,
                 )
+
+                if sentence.text:
+                    if num_sentences == 1 or sentence.idx < num_sentences - 1:
+                        if not sentence.text.endswith(SENTENCE_END_TOKENS):
+                            sentence.text += "，"
+                    else:
+                        if not sentence.text.endswith(PARAGRAPH_END_TOKENS):
+                            sentence.text += "。"
 
                 should_delete = \
                     len(sentence.text) == 0 \
@@ -58,7 +69,7 @@ def main():
                     num_deleted += 1
 
             num_deleted = len([s for s in paragraph.sentences if s.is_deleted])
-            ratio_deleted = num_deleted / len(paragraph.sentences)
+            ratio_deleted = num_deleted / num_sentences
             if ratio_deleted >= DELETE_DIRECTLY_THRESHOLD:
                 paragraph.delete()
 
