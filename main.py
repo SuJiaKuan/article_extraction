@@ -1,4 +1,5 @@
 from article_extraction.article import Article
+from article_extraction.text import de_emojify
 from article_extraction.const import FILTERED_WORDS
 from article_extraction.const import TAIWAN_COUNTRIES
 
@@ -43,6 +44,8 @@ def main():
             num_deleted = 0
 
             for sentence in paragraph.sentences:
+                sentence.text = de_emojify(sentence.text)
+
                 should_delete = \
                     sentence.contains(FILTERED_WORDS) \
                     or sentence.contains(TAIWAN_COUNTRIES)
