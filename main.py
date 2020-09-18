@@ -35,9 +35,7 @@ def process_article(article):
                 sentence.text,
                 NO_CONTINUOUS_TOKENS,
             )
-
-            while sentence.text.endswith('~'):
-                sentence.text = sentence.text[0:-1]
+            sentence.text = sentence.text.strip()
 
             if sentence.text:
                 if num_sentences == 1 or sentence.idx < num_sentences - 1:
@@ -70,6 +68,38 @@ def process_article(article):
     article.paragraphs[-1].delete()
 
     return article
+
+
+def process_abstract(abstract):
+    sentence_texts = abstract.split("\n")
+
+    for sentence_idx in range(len(sentence_texts)):
+        sentence_text = sentence_texts[sentence_idx]
+
+        sentence_text = de_emojify(sentence_text)
+        sentence_text = replace(
+            sentence_text,
+            REPLACEMENT_MAPPING,
+        )
+        sentence_text = remove_continuous_tokens(
+            sentence_text,
+            NO_CONTINUOUS_TOKENS,
+        )
+        sentence_text = sentence_text.strip()
+
+        if sentence_text:
+            if sentence_idx == len(sentence_texts) - 1:
+                if not sentence_text.endswith(PARAGRAPH_END_TOKENS):
+                    sentence_text += "。"
+            else:
+                if not sentence_text.endswith(SENTENCE_END_TOKENS):
+                    sentence_text += "，"
+
+        sentence_texts[sentence_idx] = sentence_text
+
+    abstract_out = "".join(sentence_texts).replace("\n", "")
+
+    return abstract_out
 
 
 def main():
@@ -137,7 +167,14 @@ def main():
             content_compact = content_compact[0:-1] + "。"
 
         if output_path:
-            abstract = abstracts[article_idx]
+            abstract = process_abstract(abstracts[article_idx])
+
+            '''
+            print("--before--")
+            print(abstracts[article_idx])
+            print("--after--")
+            print(abstract)
+            '''
 
             output["content"].append(content_compact)
             output["abstract"].append(abstract)
