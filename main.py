@@ -40,12 +40,7 @@ def main():
     articles = [Article(p) for p in html_paths]
 
     for article in articles:
-        # Delete last graph of an article because it is not useful in most
-        # cases.
-        article.paragraphs[-1].delete()
-
-        # Handle for each paragraph (except last paragraph).
-        for paragraph in article.paragraphs[0:-1]:
+        for paragraph in article.paragraphs:
             num_deleted = 0
             num_sentences = len(paragraph.sentences)
 
@@ -86,6 +81,10 @@ def main():
             ratio_deleted = num_deleted / num_sentences
             if ratio_deleted >= DELETE_DIRECTLY_THRESHOLD:
                 paragraph.delete()
+
+        # Delete last graph of an article because it is not useful in most
+        # cases.
+        article.paragraphs[-1].delete()
 
         content_pretty = article.get_text(color=True)
         content_compact = article.get_text(compact=True, deleted=False)
