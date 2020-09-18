@@ -167,7 +167,14 @@ def main():
             content_compact = content_compact[0:-1] + "。"
 
         if output_path:
-            abstract = process_abstract(abstracts[article_idx])
+            abstract = abstracts[article_idx]
+
+            if not isinstance(abstract, str):
+                print("Skip {} because its absract is not a string"
+                      .format(article_id))
+                continue
+
+            abstract = process_abstract(abstract)
 
             '''
             print("--before--")
