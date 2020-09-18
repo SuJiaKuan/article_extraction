@@ -1,3 +1,5 @@
+import pandas as pd
+
 from article_extraction.article import Article
 from article_extraction.text import contains
 from article_extraction.text import remove_continuous_tokens
@@ -71,6 +73,11 @@ def process_article(article):
 
 
 def main():
+    output_path = ''
+    # output_path = 'output.csv'
+
+    info_path = "./data/777.csv"
+
     '''
     html_paths = [
        "./data/html/samples/dama.html",
@@ -92,9 +99,21 @@ def main():
        "./data/html/samples/dama.html",
     ]
 
+    info_df = pd.read_csv(info_path)
+    abstracts = list(info_df["摘要"])
+
     articles = [Article(p) for p in html_paths]
 
-    for article in articles:
+    output = {
+        "content": [],
+        "abstract": [],
+    }
+
+    for article_idx, article in enumerate(articles):
+        article_id = str(article_idx).zfill(4)
+
+        print("============== {} ==============".format(article_id))
+
         article = process_article(article)
 
         content_pretty = article.get_text(color=True)
@@ -103,13 +122,26 @@ def main():
         if not content_compact.endswith("。"):
             content_compact = content_compact[0:-1] + "。"
 
-        print("[TITLE]", article.title)
-        print("[AUTHOR]", article.author_name)
-        print("[CONTENT : PRETTY]")
-        print(content_pretty)
-        print("[CONTENT : COMPACT]")
-        print(content_compact)
-        print("==============================")
+        if output_path:
+            abstract = abstracts[article_idx]
+
+            output["content"].append(content_compact)
+            output["abstract"].append(abstract)
+
+            print("Sucess to process article: {}".format(article_id))
+        else:
+            print("[TITLE]", article.title)
+            print("[AUTHOR]", article.author_name)
+            print("[CONTENT : PRETTY]")
+            print(content_pretty)
+            print("[CONTENT : COMPACT]")
+            print(content_compact)
+
+    if output_path:
+        df = pd.DataFrame(output)
+        df.to_csv(output_path)
+
+        print("Result saved in {}".format(output_path))
 
 
 if __name__ == "__main__":
