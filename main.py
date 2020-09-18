@@ -3,6 +3,7 @@ from article_extraction.text import contains
 from article_extraction.text import remove_continuous_tokens
 from article_extraction.text import de_emojify
 from article_extraction.text import replace
+from article_extraction.text import contains_business_hours
 from article_extraction.const import FILTERED_WORDS
 from article_extraction.const import REPLACEMENT_MAPPING
 from article_extraction.const import SENTENCE_END_TOKENS
@@ -70,10 +71,13 @@ def main():
                         if not sentence.text.endswith(PARAGRAPH_END_TOKENS):
                             sentence.text += "。"
 
+                is_business_hours = contains_business_hours(sentence.text)
+
                 should_delete = \
                     len(sentence.text) == 0 \
                     or contains(sentence.text, FILTERED_WORDS) \
-                    or contains(sentence.text, TAIWAN_COUNTRIES)
+                    or contains(sentence.text, TAIWAN_COUNTRIES) \
+                    or is_business_hours
                 if should_delete:
                     sentence.delete()
                     num_deleted += 1

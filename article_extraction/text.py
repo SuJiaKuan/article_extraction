@@ -45,3 +45,9 @@ def remove_continuous_tokens(text, tokens):
         text_out = re.sub("[{}]+".format(token), token, text_out)
 
     return text_out
+
+
+def contains_business_hours(text):
+    business_hours = re.findall(r"\d{1,2}：\d{1,2}", text)
+
+    return len(business_hours) >= 2
