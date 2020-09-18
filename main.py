@@ -4,6 +4,7 @@ from article_extraction.text import remove_continuous_tokens
 from article_extraction.text import de_emojify
 from article_extraction.text import replace
 from article_extraction.text import contains_business_hours
+from article_extraction.text import contains_phone_numbers
 from article_extraction.const import FILTERED_WORDS
 from article_extraction.const import REPLACEMENT_MAPPING
 from article_extraction.const import SENTENCE_END_TOKENS
@@ -67,12 +68,14 @@ def main():
                             sentence.text += "。"
 
                 is_business_hours = contains_business_hours(sentence.text)
+                is_phone_numbers = contains_phone_numbers(sentence.text)
 
                 should_delete = \
                     len(sentence.text) == 0 \
                     or contains(sentence.text, FILTERED_WORDS) \
                     or contains(sentence.text, TAIWAN_COUNTRIES) \
-                    or is_business_hours
+                    or is_business_hours \
+                    or is_phone_numbers
                 if should_delete:
                     sentence.delete()
                     num_deleted += 1
