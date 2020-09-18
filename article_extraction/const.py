@@ -31,6 +31,7 @@ FILTERED_WORDS = [
     "Telegram",
     "telegram",
     "LINE",
+    "Line",
     "Line@",
     "Line ID",
     "YOUTUBE",
@@ -45,7 +46,7 @@ FILTERED_WORDS = [
     # Information about the store.
     "店家資訊",
     "餐廳資訊",
-    # "地址",
+    "地址：",
     "店名：",
     "官網",
     "官方網站",
@@ -78,7 +79,8 @@ REPLACEMENT_MAPPING = {
     ":": "：",
     ";": "；",
     # "~": "",
-    "～": "",
+    # "～": "",
+    "~":  "～",
     "(": "（",
     ")": "）",
     "￤": "",
@@ -87,7 +89,7 @@ REPLACEMENT_MAPPING = {
     # "+": "",
     # "-": "",
     "*": "",
-    "/": "",
+    # "/": "",
     "<": "",
     ">": "",
     # "\'": "",
@@ -105,6 +107,7 @@ REPLACEMENT_MAPPING = {
     "​": "",
     "★": "",
     "♥": "",
+    "＊": "",
 }
 
 SENTENCE_END_TOKENS = (
@@ -126,6 +129,7 @@ NO_CONTINUOUS_TOKENS = SENTENCE_END_TOKENS + (
     " ",
     "（",
     "）",
+    "～",
 )
 
 TAIWAN_COUNTRIES = [
