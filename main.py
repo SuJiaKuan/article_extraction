@@ -16,6 +16,60 @@ from article_extraction.const import TAIWAN_COUNTRIES
 DELETE_DIRECTLY_THRESHOLD = 0.5
 
 
+def process_article(article):
+    # TODO (SuJiaKuan): Apply copying before processing the article.
+
+    for paragraph in article.paragraphs:
+        num_deleted = 0
+        num_sentences = len(paragraph.sentences)
+
+        for sentence in paragraph.sentences:
+            sentence.text = de_emojify(sentence.text)
+            sentence.text = replace(
+                sentence.text,
+                REPLACEMENT_MAPPING,
+            )
+            sentence.text = remove_continuous_tokens(
+                sentence.text,
+                NO_CONTINUOUS_TOKENS,
+            )
+
+            while sentence.text.endswith('~'):
+                sentence.text = sentence.text[0:-1]
+
+            if sentence.text:
+                if num_sentences == 1 or sentence.idx < num_sentences - 1:
+                    if not sentence.text.endswith(SENTENCE_END_TOKENS):
+                        sentence.text += "，"
+                else:
+                    if not sentence.text.endswith(PARAGRAPH_END_TOKENS):
+                        sentence.text += "。"
+
+            is_business_hours = contains_business_hours(sentence.text)
+            is_phone_numbers = contains_phone_numbers(sentence.text)
+
+            should_delete = \
+                len(sentence.text) == 0 \
+                or contains(sentence.text, FILTERED_WORDS) \
+                or contains(sentence.text, TAIWAN_COUNTRIES) \
+                or is_business_hours \
+                or is_phone_numbers
+            if should_delete:
+                sentence.delete()
+                num_deleted += 1
+
+        num_deleted = len([s for s in paragraph.sentences if s.is_deleted])
+        ratio_deleted = num_deleted / num_sentences
+        if ratio_deleted >= DELETE_DIRECTLY_THRESHOLD:
+            paragraph.delete()
+
+    # Delete last graph of an article because it is not useful in most
+    # cases.
+    article.paragraphs[-1].delete()
+
+    return article
+
+
 def main():
     '''
     html_paths = [
@@ -41,53 +95,7 @@ def main():
     articles = [Article(p) for p in html_paths]
 
     for article in articles:
-        for paragraph in article.paragraphs:
-            num_deleted = 0
-            num_sentences = len(paragraph.sentences)
-
-            for sentence in paragraph.sentences:
-                sentence.text = de_emojify(sentence.text)
-                sentence.text = replace(
-                    sentence.text,
-                    REPLACEMENT_MAPPING,
-                )
-                sentence.text = remove_continuous_tokens(
-                    sentence.text,
-                    NO_CONTINUOUS_TOKENS,
-                )
-
-                while sentence.text.endswith('~'):
-                    sentence.text = sentence.text[0:-1]
-
-                if sentence.text:
-                    if num_sentences == 1 or sentence.idx < num_sentences - 1:
-                        if not sentence.text.endswith(SENTENCE_END_TOKENS):
-                            sentence.text += "，"
-                    else:
-                        if not sentence.text.endswith(PARAGRAPH_END_TOKENS):
-                            sentence.text += "。"
-
-                is_business_hours = contains_business_hours(sentence.text)
-                is_phone_numbers = contains_phone_numbers(sentence.text)
-
-                should_delete = \
-                    len(sentence.text) == 0 \
-                    or contains(sentence.text, FILTERED_WORDS) \
-                    or contains(sentence.text, TAIWAN_COUNTRIES) \
-                    or is_business_hours \
-                    or is_phone_numbers
-                if should_delete:
-                    sentence.delete()
-                    num_deleted += 1
-
-            num_deleted = len([s for s in paragraph.sentences if s.is_deleted])
-            ratio_deleted = num_deleted / num_sentences
-            if ratio_deleted >= DELETE_DIRECTLY_THRESHOLD:
-                paragraph.delete()
-
-        # Delete last graph of an article because it is not useful in most
-        # cases.
-        article.paragraphs[-1].delete()
+        article = process_article(article)
 
         content_pretty = article.get_text(color=True)
         content_compact = article.get_text(compact=True, deleted=False)
