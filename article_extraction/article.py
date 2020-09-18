@@ -66,22 +66,24 @@ class Article(object):
         author_name = soup.findAll("div", {"class": "author-profile__name"})
         if not author_name:
             author_name = soup.findAll("a", {"class": "author-profile__name"})
-        author_name = author_name[0].getText()
+        author_name = author_name[0].getText() if author_name else ""
 
-        article_body = soup.findAll("div", {"class": "article-body"})[0]
+        article_body = soup.findAll("div", {"class": "article-body"})
 
         sentence_texts = []
-        for p in article_body.find_all("p"):
-            sentence_text = p.getText(strip=True)
 
-            # Skip the case that the whole sentence text is a link.
-            if len(sentence_text) > 1:
-                anchor_child = p.find("a")
-                if anchor_child is not None:
-                    if sentence_text == anchor_child.getText(strip=True):
-                        continue
+        if article_body:
+            for p in article_body[0].find_all("p"):
+                sentence_text = p.getText(strip=True)
 
-            sentence_texts.append(sentence_text)
+                # Skip the case that the whole sentence text is a link.
+                if len(sentence_text) > 1:
+                    anchor_child = p.find("a")
+                    if anchor_child is not None:
+                        if sentence_text == anchor_child.getText(strip=True):
+                            continue
+
+                sentence_texts.append(sentence_text)
 
         paragraphs = []
         paragraph_sentences = []
