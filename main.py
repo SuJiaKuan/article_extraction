@@ -79,6 +79,8 @@ def main():
     num_output_paragraphs = 0
     # num_output_paragraphs = 5
 
+    least_article_length = 100
+
     info_path = "./data/777.csv"
 
     '''
@@ -116,6 +118,11 @@ def main():
         article_id = str(article_idx).zfill(4)
 
         print("============== {} ==============".format(article_id))
+
+        if len(article.get_text()) < least_article_length:
+            print("Skip {} because its content is less than {}"
+                  .format(article_id, least_article_length))
+            continue
 
         article = process_article(article)
 
