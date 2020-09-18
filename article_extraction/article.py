@@ -113,9 +113,29 @@ class Article(object):
 
         return title, author_name, paragraphs
 
-    def get_text(self, color=False, deleted=True, compact=False):
-        text = "\n\n".join([p.get_text(color=color, deleted=deleted)
-                            for p in self.paragraphs])
+    def get_text(
+        self,
+        color=False,
+        deleted=True,
+        compact=False,
+        num_paragraphs=0,
+    ):
+        paragraph_texts = [p.get_text(color=color, deleted=deleted)
+                           for p in self.paragraphs]
+
+        if num_paragraphs > 0:
+            cnt = 0
+            reserved_paragraph_texts = []
+            for paragraph_text in paragraph_texts:
+                if len(paragraph_text) > 0:
+                    reserved_paragraph_texts.append(paragraph_text)
+                    cnt += 1
+                if cnt >= num_paragraphs:
+                    break
+        else:
+            reserved_paragraph_texts = paragraph_texts
+
+        text = "\n\n".join(reserved_paragraph_texts)
 
         if compact:
             text = text.replace("\n", "")

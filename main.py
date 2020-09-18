@@ -76,6 +76,9 @@ def main():
     output_path = ''
     # output_path = 'output.csv'
 
+    num_output_paragraphs = 0
+    # num_output_paragraphs = 5
+
     info_path = "./data/777.csv"
 
     '''
@@ -117,7 +120,11 @@ def main():
         article = process_article(article)
 
         content_pretty = article.get_text(color=True)
-        content_compact = article.get_text(compact=True, deleted=False)
+        content_compact = article.get_text(
+            compact=True,
+            deleted=False,
+            num_paragraphs=num_output_paragraphs,
+        )
 
         if not content_compact.endswith("。"):
             content_compact = content_compact[0:-1] + "。"
