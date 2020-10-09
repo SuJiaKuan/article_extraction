@@ -1,3 +1,5 @@
+import random
+
 import bs4
 
 from article_extraction.io import read_text
@@ -118,6 +120,7 @@ class Article(object):
         color=False,
         deleted=True,
         compact=False,
+        shuffle=False,
         num_paragraphs=0,
     ):
         paragraph_texts = [p.get_text(color=color, deleted=deleted)
@@ -134,6 +137,9 @@ class Article(object):
                     break
         else:
             reserved_paragraph_texts = paragraph_texts
+
+        if shuffle:
+            random.shuffle(reserved_paragraph_texts)
 
         text = "\n\n".join(reserved_paragraph_texts)
 

@@ -109,6 +109,8 @@ def main():
     num_output_paragraphs = 0
     # num_output_paragraphs = 5
 
+    num_shuffles = 0
+
     least_article_length = 100
 
     info_path = "./data/777.csv"
@@ -143,6 +145,9 @@ def main():
         "content": [],
         "abstract": [],
     }
+
+    for shuffle_idx in range(num_shuffles):
+        output["content_shuffled_{}".format(shuffle_idx)] = []
 
     for article_idx, article in enumerate(articles):
         article_id = str(article_idx).zfill(4)
@@ -185,6 +190,22 @@ def main():
 
             output["content"].append(content_compact)
             output["abstract"].append(abstract)
+
+            for shuffle_idx in range(num_shuffles):
+                content_compact_shuffled = article.get_text(
+                    compact=True,
+                    deleted=False,
+                    shuffle=True,
+                    num_paragraphs=num_output_paragraphs,
+                )
+
+                if not content_compact_shuffled.endswith("。"):
+                    content_compact_shuffled = \
+                        content_compact_shuffled[0:-1] + "。"
+
+                output["content_shuffled_{}".format(shuffle_idx)].append(
+                    content_compact_shuffled,
+                )
 
             print("Sucess to process article: {}".format(article_id))
         else:
