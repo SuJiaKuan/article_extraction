@@ -142,6 +142,7 @@ def main():
     articles = [Article(p) for p in html_paths]
 
     output = {
+        "original_index": [],
         "content": [],
         "abstract": [],
     }
@@ -188,6 +189,7 @@ def main():
             print(abstract)
             '''
 
+            output["original_index"].append(article_idx)
             output["content"].append(content_compact)
             output["abstract"].append(abstract)
 
